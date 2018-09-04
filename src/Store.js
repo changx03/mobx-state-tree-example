@@ -8,7 +8,9 @@ configure({
 const Todo = types.model('Todo', {
   title: types.string,
   done: false,
-});
+}).actions(self => ({
+  toggle() { self.done = !self.done },
+}));
 
 export const todoItem = Todo.create({
   title: 'Read a book',
