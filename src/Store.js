@@ -1,5 +1,9 @@
-import { autorun } from 'mobx';
+import { autorun, configure } from 'mobx';
 import { types } from 'mobx-state-tree';
+
+configure({
+  enforceActions: "strict",
+});
 
 const Todo = types.model('Todo', {
   title: types.string,

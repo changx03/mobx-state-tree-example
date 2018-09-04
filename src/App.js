@@ -5,6 +5,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    // Error: [mobx-state-tree] Cannot modify 'Todo@<root>', the object is protected and can only be modified by using an action.
     todoItem.done = !todoItem.done;
   }
 
