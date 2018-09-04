@@ -1,14 +1,24 @@
 import { autorun, configure } from 'mobx';
-import { types, getRoot } from 'mobx-state-tree';
+import { getRoot, types } from 'mobx-state-tree';
 
 configure({
   enforceActions: 'always',
 });
 
-// User --(1 to many)--> Todo 
+// fine-tuning primitive types
+const User = types.model('User', {
+  // userId: types.string, // uniquely identifier
+  userId: types.identifier,
+  name: types.string,
+  age: 42,
+  twitter: types.maybe(types.refinement(types.string, v => /^\w+$/.test(v))), // not a empty string
+});
+
+// User --(one-to-many)--> Todo
 const Todo = types
   .model('Todo', {
-    assignee: types.string, // represents a User
+    // assignee: types.string, // represents a User
+    assignee: types.maybe(types.reference(User)),
     title: types.string,
     done: false,
   })
@@ -36,20 +46,13 @@ const Todo = types
   }));
 
 export const todoItem = Todo.create({
+  // assignee: '1',
   title: 'Read a book',
   done: false,
 });
 
 autorun(() => {
   console.log(`${todoItem.title}: ${todoItem.done}`);
-});
-
-// fine-tuning primitive types
-const User = types.model('User', {
-  userId: types.string, // uniquely identifier
-  name: types.string,
-  age: 42,
-  twitter: types.maybe(types.refinement(types.string, v => /^\w+$/.test(v))), // not a empty string
 });
 
 const RootModel = types.model('App', {
@@ -59,15 +62,17 @@ const RootModel = types.model('App', {
 
 export const rootModel = RootModel.create({
   todos: [
-    { title: 'Write the chapter', done: false },
-    { title: 'Review the chapter', done: false },
+    { title: 'Write the chapter', done: false, assignee: '1' },
+    { title: 'Review the chapter', done: false, assignee: '1' },
   ],
   users: {
     michel: {
+      userId: '1',
       name: 'Michel Westrate',
       twitter: 'mwestrate',
     },
     pavan: {
+      userId: '2',
       name: 'Pavan Podila',
       twitter: 'pavanpodila',
     },
@@ -75,3 +80,5 @@ export const rootModel = RootModel.create({
 });
 
 rootModel.todos[0].toggle();
+
+console.log(rootModel.todos[1].assignee.name);

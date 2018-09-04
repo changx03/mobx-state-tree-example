@@ -1,15 +1,25 @@
 import { Button, Card, CardContent, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { todoItem } from './Store';
+import { todoItem, rootModel } from './Store';
+import { reaction } from 'mobx';
+import { getSnapshot } from 'mobx-state-tree';
 
 @observer
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   // Error: [mobx-state-tree] Cannot modify 'Todo@<root>', the object is protected and can only be modified by using an action.
-  //   todoItem.done = !todoItem.done;
-  // }
+  constructor(props) {
+    super(props);
+    // Error: [mobx-state-tree] Cannot modify 'Todo@<root>', the object is protected and can only be modified by using an action.
+    // todoItem.done = !todoItem.done;
+    reaction(
+      () => getSnapshot(rootModel),
+      snapshot => {
+        window.localStorage.setItem('app', JSON.stringify(snapshot));
+      },
+      { delay: 100 }
+    );
+  }
+  
 
   render() {
     return (
