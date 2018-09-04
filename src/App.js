@@ -1,22 +1,22 @@
 import { Button, Card, CardContent, Typography } from '@material-ui/core';
-import { observer } from 'mobx';
+import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { todoItem } from './Store';
 
 @observer
 class App extends Component {
-  constructor(props) {
-    super(props);
-    // Error: [mobx-state-tree] Cannot modify 'Todo@<root>', the object is protected and can only be modified by using an action.
-    // todoItem.done = !todoItem.done;
-  }
+  // constructor(props) {
+  //   super(props);
+  //   // Error: [mobx-state-tree] Cannot modify 'Todo@<root>', the object is protected and can only be modified by using an action.
+  //   todoItem.done = !todoItem.done;
+  // }
 
   render() {
     return (
-      <Card>
+      <Card style={{ width: 600, margin: "auto" }}>
         <CardContent>
           <Typography variant={'headline'}>
-            {!todoItem.done ? todoItem.title : 'Done!'}
+            {todoItem.asMarkdonw}
           </Typography>
           <Button
             onClick={() => todoItem.toggle()}
